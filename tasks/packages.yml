@@ -10,6 +10,9 @@
     repo: deb http://repository.spotify.com stable non-free
     state: present
 
+# The Spotify maintainers target Ubuntu LTS, so the Debian install target
+# fails by default. Fetch an older version of libssl from the Jessie repos
+# and install that, but only under Debian stretch.
 - name: Fetch older libssl package.
   get_url:
     url: "{{ spotify_libssl_backport_url }}"
