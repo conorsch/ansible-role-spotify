@@ -9,3 +9,21 @@
   apt_repository:
     repo: deb http://repository.spotify.com stable non-free
     state: present
+
+- name: Fetch older libssl package.
+  get_url:
+    url: "{{ spotify_libssl_backport_url }}"
+    sha256sum: 0fc777d9242fd93851eb49c4aafd22505048b7797c0178f20c909ff918320619
+    dest: "/usr/lib/src/{{ spotify_libssl_backport_url|basename }}"
+  when: ansible_distribution == 'Debian' and ansible_distribution_release in ['stretch', 'sid']
+
+- name: Install older libssl package.
+  apt:
+    deb: "/usr/lib/src/{{ spotify_libssl_backport_url|basename }}"
+    state: present
+  when: ansible_distribution == 'Debian' and ansible_distribution_release in ['stretch', 'sid']
+
+- name: Install spotify client.
+  apt:
+    name: spotify-client
+    state: present
