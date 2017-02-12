@@ -1,11 +1,13 @@
 ---
 - name: Add spotify apt repo key.
+  become: yes
   apt_key:
     url: "http://keyserver.ubuntu.com/pks/lookup?op=get&search=0x13B00F1FD2C19886"
     id: "BBEBDCB318AD50EC6865090613B00F1FD2C19886"
     state: present
 
 - name: Add spotify apt repo.
+  become: yes
   apt_repository:
     repo: deb http://repository.spotify.com stable non-free
     state: present
@@ -14,6 +16,7 @@
 # fails by default. Fetch an older version of libssl from the Jessie repos
 # and install that, but only under Debian stretch.
 - name: Fetch older libssl package.
+  become: yes
   get_url:
     url: "{{ spotify_libssl_backport_url }}"
     sha256sum: 0fc777d9242fd93851eb49c4aafd22505048b7797c0178f20c909ff918320619
@@ -21,12 +24,14 @@
   when: ansible_distribution == 'Debian' and ansible_distribution_release in ['stretch', 'sid']
 
 - name: Install older libssl package.
+  become: yes
   apt:
     deb: "/usr/lib/src/{{ spotify_libssl_backport_url|basename }}"
     state: present
   when: ansible_distribution == 'Debian' and ansible_distribution_release in ['stretch', 'sid']
 
 - name: Install spotify client.
+  become: yes
   apt:
     name: spotify-client
     state: present
