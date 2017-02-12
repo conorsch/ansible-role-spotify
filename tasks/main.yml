@@ -1,2 +1,3 @@
 ---
 # tasks file for spotify
+- include: packages.yml
